@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Create User</title>
+<style>
+body { text-align: center; font-family: Arial; margin-top: 30px; }
+input, select, button { padding: 8px; margin: 5px; width: 200px; }
+</style>
+</head>
+<body>
+<h2>Create User</h2>
+<a href="/">Back to Dashboard</a><hr>
+<form method="POST">
+<input type="text" name="username" placeholder="Username" required><br>
+<input type="password" name="password" placeholder="Password" required><br>
+<select name="role" required>
+<option value="">Select Role</option>
+<option value="teacher">Teacher</option>
+<option value="gate">Gate</option>
+</select><br>
+<input type="text" name="classes" placeholder="Assigned Classes (e.g., Grade10-P,Form3-W)" required><br>
+<input type="text" name="phone" placeholder="Phone Number for SMS" required><br>
+<button type="submit">Create User</button>
+</form>
+</body>
+</html>

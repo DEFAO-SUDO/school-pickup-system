@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Pickup History</title>
+<style>
+body { text-align: center; font-family: Arial; }
+table { margin: 0 auto; border-collapse: collapse; width: 80%; }
+th, td { border: 1px solid black; padding: 8px; text-align: center; }
+.status-picked { color: white; background-color: green; font-weight: bold; padding: 3px 6px; border-radius: 4px; }
+</style>
+</head>
+<body>
+<h2>Pickup History</h2>
+<a href="/">Back to Dashboard</a><hr>
+<table>
+<tr>
+<th>Student Name</th>
+<th>Parent</th>
+<th>Parent Number</th>
+<th>Time</th>
+<th>Status</th>
+</tr>
+{% for r in records %}
+<tr>
+<td>{{ r[1] }}</td>
+<td>{{ r[2] }}</td>
+<td>{{ r[3] }}</td>
+<td>{{ r[4] }}</td>
+<td><span class="status-picked">Picked</span></td>
+</tr>
+{% endfor %}
+</table>
+</body>
+</html>

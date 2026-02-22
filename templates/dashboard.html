@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Admin Dashboard</title>
+</head>
+<body>
+
+<h2>Admin Dashboard</h2>
+
+<h3>Add Teacher</h3>
+<form action="/add_teacher" method="POST">
+    <input type="text" name="username" placeholder="Teacher Username" required>
+    <input type="text" name="password" placeholder="Password" required>
+    <button type="submit">Add Teacher</button>
+</form>
+
+<h3>Teachers List</h3>
+<ul>
+    {% for teacher in teachers %}
+        <li>
+            {{ teacher[1] }}
+            <a href="/delete_teacher/{{ teacher[0] }}">Delete</a>
+        </li>
+    {% endfor %}
+</ul>
+
+<a href="/logout">Logout</a>
+
+</body>
+</html>

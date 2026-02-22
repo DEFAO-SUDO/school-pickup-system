@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>School Pickup Dashboard</title>
+<style>
+body { text-align: center; font-family: Arial; }
+table { margin: 0 auto; border-collapse: collapse; width: 90%; }
+th, td { border: 1px solid black; padding: 8px; text-align: center; }
+input, select, button { margin: 3px; padding: 3px; }
+.status-picked { color: white; background-color: green; font-weight: bold; padding: 3px 6px; border-radius: 4px; }
+.status-notpicked { color: white; background-color: red; font-weight: bold; padding: 3px 6px; border-radius: 4px; }
+form.pickup-form input { width: 120px; }
+a { margin: 0 5px; }
+</style>
+</head>
+<body>
+<h1>Highridge Secondary School Pickup System</h1>
+<p>Logged in as <strong>{{ session['user'] }}</strong> ({{ role }})</p>
+<a href="/add">Add Student</a> |
+{% if role == 'admin' %}
+<a href="/create_user">Create User</a> |
+<a href="/manage_users">Manage Teachers</a> |
+{% endif %}
+<a href="/history">History</a> | <a href="/logout">Logout</a>
+<hr>
+
+{% if role == 'admin' %}
+<form method="GET">
+<select name="filter_class">
+<option value="">All Grades</option>
+<option value="Grade10">Grade 10</option>
+<option value="Form3">Form 3</option>
+<option value="Form4">Form 4</option>
+</select>
+<select name="filter_stream">
+<option value="">All Streams</option>
+<option value="P">P</option>
+<option value="I">I</option>
+<option value="B">B</option>
+<option value="S">S</option>
+<option value="C">C</option>
+<option value="N">N</option>
+<option value="W">W</option>
+<option value="E">E</option>
+</select>
+<button type="submit">Filter</button>
+</form><br>
+{% endif %}
+
+<form method="GET">
+<input type="text" name="search" placeholder="Search student">
+<button type="submit">Search</button>
+</form><br>
+
+<table>
+<tr>
+<th>Name</th><th>Grade</th><th>Stream</th><th>Parent</th><th>Parent Number</th><th>Admission No.</th><th>Status</th><th>Action</th>
+</tr>
+{% for s in students %}
+<tr>
+<td>{{ s[1] }}</td>
+<td>{{ s[2] }}</td>
+<td>{{ s[3] }}</td>
+<td>{{ s[4] }}</td>
+<td>{{ s[5] }}</td>
+<td>{{ s[6] }}</td>
+<td>
+{% if s[7] == 'Picked' %}
+<span class="status-picked">Picked</span>
+{% else %}
+<span class="status-notpicked">Not Picked</span>
+{% endif %}
+</td>
+<td>
+{% if s[7] == 'Not Picked' %}
+<form class="pickup-form" method="POST" action="/pickup/{{ s[0] }}">
+<input type="text" name="admission_number" placeholder="Admission Number" required>
+<button type="submit">Confirm Pickup</button>
+</form>
+{% else %}
+✔
+{% endif %}
+</td>
+</tr>
+{% endfor %}
+</table>
+</body>
+</html>
