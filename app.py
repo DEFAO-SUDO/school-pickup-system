@@ -1,18 +1,10 @@
 from flask import Flask, render_template, request, redirect, session
 import sqlite3
 from datetime import datetime
-import africastalking
 
 app = Flask(__name__)
 app.secret_key = "supersecretkey"
 DB_NAME = 'students.db'
-
-# ================= AFRICA'S TALKING SETUP =================
-AT_USERNAME = "YOUR_AT_USERNAME"  # Replace with your Africa's Talking username
-AT_API_KEY = "YOUR_AT_API_KEY"    # Replace with your Africa's Talking API key
-
-africastalking.initialize(AT_USERNAME, AT_API_KEY)
-sms = africastalking.SMS
 
 # ================= DATABASE =================
 def init_db():
@@ -32,11 +24,11 @@ def init_db():
     try:
         c.execute("ALTER TABLE users ADD COLUMN classes TEXT")
     except sqlite3.OperationalError:
-        pass  # Column already exists
+        pass
     try:
         c.execute("ALTER TABLE users ADD COLUMN phone TEXT")
     except sqlite3.OperationalError:
-        pass  # Column already exists
+        pass
 
     # STUDENTS TABLE
     c.execute('''
@@ -229,7 +221,7 @@ def add_student():
         return redirect('/')
     return render_template('add_student.html')
 
-# ================= PICKUP + SMS =================
+# ================= PICKUP =================
 @app.route('/pickup/<int:id>', methods=['POST'])
 def pickup(id):
     if 'user' not in session:
@@ -250,27 +242,6 @@ def pickup(id):
         )
         conn.commit()
 
-        # SMS to parent
-        message_parent = f"Dear {student[3]}, your child {student[0]} ({student[1]}-{student[2]}) has been picked successfully."
-        try:
-            sms.send(message_parent, [student[4]], sender="AT")
-        except Exception as e:
-            print("SMS parent error:", e)
-
-        # SMS to teacher
-        c.execute(
-            "SELECT phone FROM users WHERE role IN ('teacher','gate') AND classes LIKE ?",
-            (f"%{student[1]}-{student[2]}%",)
-        )
-        teachers = c.fetchall()
-        for t in teachers:
-            teacher_phone = t[0]
-            message_teacher = f"Student Picked: {student[0]} ({student[1]}-{student[2]}) Parent: {student[3]} ({student[4]})"
-            try:
-                sms.send(message_teacher, [teacher_phone], sender="AT")
-            except Exception as e:
-                print("SMS teacher error:", e)
-
     conn.close()
     return redirect('/')
 
@@ -288,4 +259,4 @@ def history():
 
 # ================= RUN =================
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host="0.0.0.0", port=5000)
